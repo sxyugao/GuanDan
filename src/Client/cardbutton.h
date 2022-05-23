@@ -19,13 +19,13 @@ public:
     bool operator<(const CardButton &other) const;
 
     Card card;
+    bool selected;
 
 signals:
     void cardSelected(bool, CardButton *);
 
 private:
     bool isFront;
-    int selected;
     QPixmap img[2];
 
 protected:

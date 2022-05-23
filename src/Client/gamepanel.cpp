@@ -38,7 +38,7 @@ void GamePanel::waitForOthers()
     // 初始化出牌按钮
     btn_play = new QPushButton("出牌", this);
     btn_play->setStyleSheet("background:white");
-    btn_play->move(centralX, centralY + dy[1] - 60);
+    btn_play->move(centralX - 50, centralY + dy[1] - 60);
     btn_play->setDisabled(true);
     btn_play->setVisible(false);
     btn_play->hide();
@@ -50,7 +50,41 @@ void GamePanel::waitForOthers()
     btn_skip->setDisabled(true);
     btn_skip->setVisible(false);
     btn_skip->hide();
-    connect(btn_skip, SIGNAL(clicked()), this, SLOT(skipRound()));
+    // 初始化不要按钮
+    btn_adjust = new QPushButton("调整", this);
+    btn_adjust->setStyleSheet("background:white");
+    btn_adjust->move(btn_skip->x() + 100, btn_skip->y());
+    btn_adjust->setDisabled(true);
+    btn_adjust->setVisible(false);
+    btn_adjust->hide();
+    connect(btn_adjust, SIGNAL(clicked()), this, SLOT(adjust()));
+}
+
+void GamePanel::adjust()
+{
+    Hand tmpHand(tmpCards);
+    if (tmpHand.type != HandType::straight && tmpHand.type != HandType::straightFlush) {
+        return;
+    }
+    st = !st;
+    if (st) {
+        for (int i = 0; i < tmpCards.size(); ++i) {
+            cardButtons[1].remove(tmpCards[i]);
+        }
+        for (int i = tmpCards.size() - 1; i >= 0; --i) {
+            CardButton *tmpCard = new CardButton(tmpCards[i], this);
+            tmpCard->setDisabled(false);
+            tmpCard->selected = true;
+            connect(tmpCard,
+                    SIGNAL(cardSelected(bool, CardButton *)),
+                    this,
+                    SLOT(selectCard(bool, CardButton *)));
+            cardButtons[1].add(tmpCard);
+        }
+    } else {
+        cardButtons[1].sort();
+    }
+    updateCards(1);
 }
 
 void GamePanel::initTributeUI(bool f)
@@ -133,8 +167,10 @@ void GamePanel::initData()
         playedCards[i].clear();
         cardButtons[i].clear();
     }
+    st = 0;
     btn_play->hide();
     btn_skip->hide();
+    btn_adjust->hide();
     tmpCards.clear();
     tribute = Tribute(opt_antiTribute, Card());
     player->clear();
@@ -212,6 +248,7 @@ void GamePanel::handleRound(QJsonObject data)
         // 启用按钮
         btn_play->setDisabled(false);
         btn_skip->setDisabled(false);
+        btn_adjust->setDisabled(false);
         // 牌出完了
         if (round.remains[player->id] == 0) {
             skipRound();
@@ -229,6 +266,7 @@ void GamePanel::playHand()
     // 禁用按钮
     btn_play->setDisabled(true);
     btn_skip->setDisabled(true);
+    btn_adjust->setDisabled(true);
     tmpCards.clear();
     // 更新要发给服务器的round
     round.nowHand = tmpHand;
@@ -259,7 +297,8 @@ void GamePanel::updateCards(int id)
         dY = card_height / 4;
     }
     for (int i = 0; i < cnt; ++i) {
-        cardButtons[id][i]->move(stX + dX * i, stY + dY * i);
+        cardButtons[id][i]->move(stX + dX * i,
+                                 stY + dY * i - cardButtons[id][i]->selected * card_height / 3);
         cardButtons[id][i]->raise();
         cardButtons[id][i]->show();
     }
@@ -314,6 +353,8 @@ void GamePanel::handOutCards()
     btn_play->show();
     btn_skip->setVisible(true);
     btn_skip->show();
+    btn_adjust->setVisible(true);
+    btn_adjust->show();
     emit handOutCardsFinish();
 }
 
@@ -333,6 +374,7 @@ void GamePanel::selectCard(bool f, CardButton *card)
     } else {
         tmpCards.remove(card->card);
     }
+    updateCards(1);
 }
 
 QByteArray GamePanel::roundToStream()

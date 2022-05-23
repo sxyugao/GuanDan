@@ -43,6 +43,7 @@ private slots:
     void playHand();
     void handleTribute();
     void skipRound();
+    void adjust();
 
 private:
     // 更新卡牌界面
@@ -70,7 +71,7 @@ private:
     /// 出牌区的牌
     CardButtons playedCards[4];
     // 一些按钮
-    QPushButton *btn_play, *btn_skip;
+    QPushButton *btn_play, *btn_skip, *btn_adjust;
     /// 收到的Round
     Round round;
     // 贡牌相关
@@ -78,6 +79,7 @@ private:
     Tribute tribute;
     /// 上一次出牌的人
     int lstPlayer = -1;
+    int st = 0;
 
 protected:
     virtual void paintEvent(QPaintEvent *event) final;
