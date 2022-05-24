@@ -45,6 +45,7 @@ void GameServer::run()
 
 void GameServer::sendMsg(QTcpSocket *tcp, QByteArray msg)
 {
+    Delay::exec(100);
     tcp->write(msg);
 }
 

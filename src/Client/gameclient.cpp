@@ -65,6 +65,7 @@ void GameClient::recvMsg()
 
 void GameClient::sendMsg(QByteArray data)
 {
+    Delay::exec(50);
     tcpClient->write(data);
 }
 
@@ -80,7 +81,6 @@ void GameClient::sendTribute()
 
 void GameClient::readyForNewRound()
 {
-    Delay::exec(200);
     QJsonObject data;
     data.insert("opt", opt_readyForNewRound);
     QJsonDocument jsonDoc(data);
@@ -89,7 +89,6 @@ void GameClient::readyForNewRound()
 
 void GameClient::handOutCardsFinish()
 {
-    Delay::exec(200);
     QJsonObject data;
     data.insert("opt", opt_handOutCardsFinish);
     QJsonDocument msg(data);
@@ -98,7 +97,6 @@ void GameClient::handOutCardsFinish()
 
 void GameClient::handOutScoreFinish()
 {
-    Delay::exec(200);
     QJsonObject data;
     data.insert("opt", opt_handOutScoreFinish);
     QJsonDocument jsonDoc(data);
@@ -107,7 +105,6 @@ void GameClient::handOutScoreFinish()
 
 void GameClient::showTributesFinish()
 {
-    Delay::exec(200);
     QJsonObject data;
     data.insert("opt", opt_showTributesFinish);
     QJsonDocument jsonDoc(data);
