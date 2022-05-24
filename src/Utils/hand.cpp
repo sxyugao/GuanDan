@@ -15,7 +15,10 @@ void Hand::preHandle()
 
     // 预处理牌的种类、数量以及花色，cards 中是有序的，因此 figureList 也是有序的
     bool sameSuit = 1;
-    int cnt[20] = {0}, pri[20] = {0}, oriPri[20] = {0};
+    int cnt[20], pri[20], oriPri[20];
+    memset(cnt, 0, sizeof(cnt));
+    memset(pri, 0, sizeof(pri));
+    memset(oriPri, 0, sizeof(oriPri));
     QList<int> figureList;
     for (auto &&card : cards) {
         cnt[card.figure]++;
@@ -108,14 +111,22 @@ Hand::Hand(Cards cards)
 {
     this->cards = cards.cards;
     preHandle();
-    for (int i = 0; i < this->cards.size() && this->type == illegal; ++i) {
+    this->cards = cards.cards;
+    for (int i = 0; i < this->cards.size(); ++i) {
         if (this->cards[i].isLevelCard && this->cards[i].suit == Suit::Heart) {
             Card tmpCard = this->cards[i];
-            for (int j = 1; j <= 52 && this->type == illegal; ++j) {
+            Hand tmpHand = *this;
+            for (int j = 52; j > 0; --j) {
                 this->cards[i] = Card(j, false);
                 preHandle();
+                if (this->isBigger(tmpHand)) {
+                    tmpHand = *this;
+                }
+                this->cards = cards.cards;
             }
-            this->cards[i] = tmpCard;
+            *this = tmpHand;
+            this->cards = cards.cards;
+            return;
         }
     }
 }

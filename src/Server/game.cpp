@@ -31,6 +31,7 @@ void Game::init()
 
 void Game::newRound()
 {
+    escaped.clear();
     round = Round(firstPlayer, level);
     emit handOutRound();
 }
@@ -149,7 +150,6 @@ void Game::prepareGiveBackTribute()
     for (int i = 0; i < tributes.size(); ++i) {
         tributes[i].toPlayer = giveTributeTo[tributes[i].fromPlayer];
     }
-    escaped.clear();
 }
 
 void Game::giveBackTributeAllRecv()

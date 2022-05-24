@@ -24,7 +24,6 @@ void GameClient::recvMsg()
 {
     QByteArray ori = tcpClient->readAll();
     QJsonObject data = QJsonDocument::fromJson(ori).object();
-    qDebug() << data;
     switch (data.value("opt").toInt()) {
     case opt_err:
         QMessageBox::warning(parent, "错误", data.value("msg").toString(), QMessageBox::Ok);
@@ -81,6 +80,7 @@ void GameClient::sendTribute()
 
 void GameClient::readyForNewRound()
 {
+    Delay::exec(200);
     QJsonObject data;
     data.insert("opt", opt_readyForNewRound);
     QJsonDocument jsonDoc(data);
@@ -89,6 +89,7 @@ void GameClient::readyForNewRound()
 
 void GameClient::handOutCardsFinish()
 {
+    Delay::exec(200);
     QJsonObject data;
     data.insert("opt", opt_handOutCardsFinish);
     QJsonDocument msg(data);
@@ -97,6 +98,7 @@ void GameClient::handOutCardsFinish()
 
 void GameClient::handOutScoreFinish()
 {
+    Delay::exec(200);
     QJsonObject data;
     data.insert("opt", opt_handOutScoreFinish);
     QJsonDocument jsonDoc(data);
@@ -105,6 +107,7 @@ void GameClient::handOutScoreFinish()
 
 void GameClient::showTributesFinish()
 {
+    Delay::exec(200);
     QJsonObject data;
     data.insert("opt", opt_showTributesFinish);
     QJsonDocument jsonDoc(data);
