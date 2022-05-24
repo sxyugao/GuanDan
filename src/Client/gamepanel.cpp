@@ -50,6 +50,7 @@ void GamePanel::waitForOthers()
     btn_skip->setDisabled(true);
     btn_skip->setVisible(false);
     btn_skip->hide();
+    connect(btn_skip, SIGNAL(clicked()), this, SLOT(skipRound()));
     // 初始化不要按钮
     btn_adjust = new QPushButton("调整", this);
     btn_adjust->setStyleSheet("background:white");
@@ -70,6 +71,9 @@ void GamePanel::adjust()
     if (st) {
         for (int i = 0; i < tmpCards.size(); ++i) {
             cardButtons[1].remove(tmpCards[i]);
+        }
+        for (int i = 0; i < cardButtons[1].size(); ++i) {
+            cardButtons[1][i]->selected = false;
         }
         for (int i = tmpCards.size() - 1; i >= 0; --i) {
             CardButton *tmpCard = new CardButton(tmpCards[i], this);
@@ -266,7 +270,6 @@ void GamePanel::playHand()
     // 禁用按钮
     btn_play->setDisabled(true);
     btn_skip->setDisabled(true);
-    btn_adjust->setDisabled(true);
     tmpCards.clear();
     // 更新要发给服务器的round
     round.nowHand = tmpHand;

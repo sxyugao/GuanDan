@@ -11,7 +11,6 @@ public:
     Round(int playerId, int lvl);
     Round(QJsonObject data);
     virtual void generateJson() final;
-    void update();
 
     /// 当前牌型
     Hand nowHand;

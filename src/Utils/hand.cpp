@@ -15,13 +15,14 @@ void Hand::preHandle()
 
     // 预处理牌的种类、数量以及花色，cards 中是有序的，因此 figureList 也是有序的
     bool sameSuit = 1;
-    int cnt[20] = {0}, pri[20] = {0};
+    int cnt[20] = {0}, pri[20] = {0}, oriPri[20] = {0};
     QList<int> figureList;
     for (auto &&card : cards) {
         cnt[card.figure]++;
         if (cnt[card.figure] == 1) {
             figureList.append(card.figure);
-            pri[card.figure] = card.oriPoint;
+            pri[card.figure] = card.point;
+            oriPri[card.figure] = card.oriPoint;
         }
         sameSuit &= card.suit == cards[0].suit;
     }
@@ -94,10 +95,10 @@ void Hand::preHandle()
         int t1 = figureList[0], t2 = figureList[1], t3 = figureList[4];
         if (t3 - t1 == 4) { // 直接相邻
             this->type = sameSuit ? straightFlush : straight;
-            this->point = pri[t3];
+            this->point = oriPri[t3];
         } else if (t2 - t1 == 9 && t1 == 1) { // A 10 J Q K
             this->type = sameSuit ? straightFlush : straight;
-            this->point = pri[t1];
+            this->point = oriPri[t1];
         }
         return;
     }
