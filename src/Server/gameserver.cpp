@@ -45,7 +45,7 @@ void GameServer::run()
 
 void GameServer::sendMsg(QTcpSocket *tcp, QByteArray msg)
 {
-    Delay::exec(100);
+    Delay::exec(25);
     tcp->write(msg);
 }
 
@@ -59,15 +59,15 @@ void GameServer::recvMsg()
     case opt_handOutCardsFinish:
         ++cnt;
         if (cnt == player_num) {
-            handOutScore();
             cnt = 0;
+            handOutScore();
         }
         break;
     case opt_handOutScoreFinish:
         ++cnt;
         if (cnt == player_num) {
-            game->preparePayTribute();
             cnt = 0;
+            game->preparePayTribute();
         }
         break;
     case opt_showTributesFinish:
@@ -88,18 +88,18 @@ void GameServer::recvMsg()
     case opt_readyForNewRound:
         ++cnt;
         if (cnt == player_num) {
-            game->upgrade();
             cnt = 0;
+            game->upgrade();
         }
         break;
     case opt_payTribute:
         ++cnt;
         game->recvTribute(data);
         if (cnt == game->tributeList().size()) {
+            cnt = 0;
             game->prepareGiveBackTribute();
             handOutTributes();
             game->tributes.clear();
-            cnt = 0;
         }
         break;
 
@@ -107,17 +107,17 @@ void GameServer::recvMsg()
         ++cnt;
         game->recvTribute(data);
         if (cnt == game->tributeList().size()) {
+            cnt = 0;
             game->giveBackTributeAllRecv();
             handOutTributes();
             game->tributes.clear();
-            cnt = 0;
         }
         break;
     case opt_antiTribute:
         ++cnt;
         if (cnt == player_num) {
-            game->newRound();
             cnt = 0;
+            game->newRound();
         }
         break;
     }

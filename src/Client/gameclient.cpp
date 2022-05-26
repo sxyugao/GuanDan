@@ -65,7 +65,7 @@ void GameClient::recvMsg()
 
 void GameClient::sendMsg(QByteArray data)
 {
-    Delay::exec(50);
+    Delay::exec(100);
     tcpClient->write(data);
 }
 

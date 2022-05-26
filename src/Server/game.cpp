@@ -31,8 +31,10 @@ void Game::init()
 
 void Game::newRound()
 {
+    if (!escaped.empty()) {
+        firstPlayer = score.rank[0];
+    }
     escaped.clear();
-    firstPlayer = score.rank[0];
     round = Round(firstPlayer, level);
     emit handOutRound();
 }
