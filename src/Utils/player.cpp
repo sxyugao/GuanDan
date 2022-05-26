@@ -25,6 +25,7 @@ void Player::sortCards()
 
 int Player::maxCardPoint()
 {
+    cards.sortByPoint();
     for (int i = cards.size() - 1; i >= 0; --i) {
         if (cards[i].suit != Suit::Heart) {
             return cards[i].point;
