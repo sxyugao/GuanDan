@@ -35,6 +35,7 @@ void Game::newRound()
         firstPlayer = score.rank[0];
     }
     escaped.clear();
+    memset(vis, 0, sizeof(vis));
     round = Round(firstPlayer, level);
     emit handOutRound();
 }
@@ -122,7 +123,6 @@ void Game::preparePayTribute()
         return;
     }
     // 预处理贡牌对象
-    memset(vis, 0, sizeof(vis));
     memset(giveTributeTo, -1, sizeof(giveTributeTo));
     needToPayTribute.clear();
     needToPayTribute.append(score.rank[player_num - 1]);
